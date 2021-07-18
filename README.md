@@ -42,6 +42,7 @@ for collecting and updating data has been implemented.
    ```
    
 Web-scrapping result:
+
 ![result](result.png)
 
 Developed by [Stepan Denisov](https://t.me/sd_denisoff 'telegram')

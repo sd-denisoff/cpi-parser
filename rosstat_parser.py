@@ -4,10 +4,12 @@ Parse CPI data from Rosstat
 
 import logging
 import re
+import time
 from typing import List, Optional
 
 import pandas as pd
 import requests
+import schedule
 from bs4 import BeautifulSoup
 
 from db_config import ENGINE
@@ -127,7 +129,16 @@ class RosstatParser:
         logging.info(f'CPI data has been updated in DB!')
 
 
-if __name__ == '__main__':
+def main():
     parser = RosstatParser()
     cpi_tables_links = parser()
     RosstatParser.update_cpi(cpi_tables_links)
+
+
+schedule.every().week.do(main)
+
+if __name__ == '__main__':
+    main()
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
