@@ -6,7 +6,7 @@
 
 [Rosstat](https://rosstat.gov.ru/) web-scrapper 
 for obtaining official published inflation values.
-As a final product, a monthly **cron-job** 
+As a final product, monthly **cron-job** 
 for collecting and updating data has been implemented.
 
 ## Technology stack
