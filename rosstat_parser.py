@@ -1,5 +1,5 @@
 """
-Parse CPI data from Rosstat excel files
+Parse CPI data from Rosstat
 """
 
 import logging
@@ -9,6 +9,8 @@ from typing import List, Optional
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+
+from db_config import ENGINE
 
 logging.basicConfig(level=logging.INFO)
 
@@ -36,12 +38,16 @@ class RosstatParser:
         except requests.exceptions.HTTPError as e:
             logging.error(f'HTTP error caused while getting the MAIN page: {e}')
             return
+
         try:
             self.get_cpi_page()
         except requests.exceptions.HTTPError as e:
             logging.error(f'HTTP error caused while getting the CPI page: {e}')
             return
-        return RosstatParser.get_excel_tables(self.cpi_page)
+
+        tables = RosstatParser.get_excel_tables(self.cpi_page)
+        logging.info(f'Web-scrapping result: {tables}')
+        return tables
 
     def get_main_page(self):
         """
@@ -86,10 +92,10 @@ class RosstatParser:
         Return series [date -> CPI value] (in relation to the previous month)
         """
         df = pd.read_excel(link, engine='openpyxl', index_col=0, header=3, skipfooter=1)
-        return RosstatParser.data_processing(df)
+        return RosstatParser.process_data(df)
 
     @staticmethod
-    def data_processing(df: pd.DataFrame) -> pd.Series:
+    def process_data(df: pd.DataFrame) -> pd.Series:
         """
         Clean and reformat dataframe with CPI data
         """
@@ -107,9 +113,7 @@ class RosstatParser:
 
         unstacked_df = df.unstack()
         dates = [f'{timestamp[0]} {timestamp[1]}' for timestamp in unstacked_df.index]
-        return pd.Series(unstacked_df.values, index=pd.to_datetime(dates))
-
-    """ Updater """
+        return pd.Series(unstacked_df.values, index=pd.to_datetime(dates).date, name='cpi')
 
     @staticmethod
     def update_cpi(tables: List[str]):
@@ -119,12 +123,11 @@ class RosstatParser:
         titles = ['goods_and_services', 'food_products', 'non_food_products', 'services']
         for title, table in zip(titles, tables):
             cpi_data = RosstatParser.get_cpi_data(table)
-            # SQL
+            cpi_data.to_sql(name=title, index_label='date', con=ENGINE, if_exists='replace')
+        logging.info(f'CPI data has been updated in DB!')
 
 
 if __name__ == '__main__':
     parser = RosstatParser()
     cpi_tables_links = parser()
-    logging.info(f'Web-scrapping result: {cpi_tables_links}')
     RosstatParser.update_cpi(cpi_tables_links)
-    logging.info(f'CPI data has been updated in DB!')

@@ -4,9 +4,8 @@
 
 ## Description
 
-[Rosstat](https://rosstat.gov.ru/) web-scrapper 
-for obtaining official published inflation values.
-As a final product, monthly **cron-job** 
+[Rosstat](https://rosstat.gov.ru/) web-scrapper for obtaining official published inflation values. As a final product,
+monthly **cron-job**
 for collecting and updating data has been implemented.
 
 ## Technology stack
@@ -15,16 +14,17 @@ for collecting and updating data has been implemented.
 - requests
 - BeautifulSoup
 - pandas, numpy
+- SQLAlchemy
 
 ## Launch instruction
 
-1. Install [python3](https://www.python.org/) 
+1. Install [python3](https://www.python.org/)
 
 2. Clone the repository and change the directory
    ```bash
    $ git clone https://github.com/sd-denisoff/cpi-parser.git && cd cpi-parser
    ```
-   
+
 3. Create a virtual environment and activate it
    ```bash
    $ virtualenv --python=python3 venv
@@ -40,5 +40,8 @@ for collecting and updating data has been implemented.
    ```bash
    $ python3 rosstat_parser.py
    ```
-  
+   
+Web-scrapping result:
+![result](result.png)
+
 Developed by [Stepan Denisov](https://t.me/sd_denisoff 'telegram')
