@@ -4,9 +4,13 @@
 
 ## Description
 
-[Rosstat](https://rosstat.gov.ru/) web-scrapper for obtaining official published inflation values. As a final product,
-monthly **cron-job**
-for collecting and updating data has been implemented.
+[Rosstat](https://rosstat.gov.ru/) web-scraper for obtaining official published inflation values.
+
+Since Rosstat doesn't have its own API, in order to conveniently obtain official data on Russian inflation today, you
+need to contact financial analytical companies and pay for their data. This script receives official values using
+web-scraping, extracting the Excel tables from the HTML code and processing them into a convenient format.
+
+Final product: weekly **cron-job** for collecting and updating data.
 
 ## Technology stack
 
@@ -40,8 +44,8 @@ for collecting and updating data has been implemented.
    ```bash
    $ python3 rosstat_parser.py
    ```
-   
-Web-scrapping result:
+
+Web-scraping result:
 
 ![result](result.png)
 
