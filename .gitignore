@@ -1,0 +1,20 @@
+# python cache
+*.pyc
+*__pycache__/
+*ipynb_checkpoints/
+
+# JetBrains IDE
+.idea/
+
+# virtual environment
+venv/
+
+# database
+db.sqlite3
+*migrations/
+
+# logging
+logs/
+
+# trash
+.DS_Store
